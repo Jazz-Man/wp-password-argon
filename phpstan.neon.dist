@@ -1,6 +1,6 @@
 includes:
     - phar://phpstan.phar/conf/bleedingEdge.neon
-#    - %currentWorkingDirectory%/phpstan-baseline.neon
+    - %currentWorkingDirectory%/phpstan-baseline.neon
 
 parameters:
 	level: max

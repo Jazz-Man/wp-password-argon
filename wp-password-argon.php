@@ -17,11 +17,11 @@
  * @param string $data   Plain text to hash
  * @param string $scheme Authentication scheme (auth, secure_auth, logged_in, nonce)
  *
- * @return string Hash of $data
+ * @return false|string Hash of $data
  *
  * @since 2.0.3
  */
-function wp_hash(string $data, string $scheme = 'auth'): string {
+function wp_hash(string $data, string $scheme = 'auth') {
     $salt = wp_salt($scheme);
 
     return hash_hmac('sha512', $data, $salt);
@@ -69,13 +69,25 @@ if (!function_exists('app_get_wp_phpass')) {
  */
 function wp_check_password(string $password, string $hash, $user_id = ''): bool {
     if (!password_needs_rehash($hash, PASSWORD_ARGON2I, (array) app_get_hash_password_options())) {
+        $_password = wp_hash($password);
+
+        if (empty($_password)) {
+            return false;
+        }
+
         return (bool) apply_filters(
             'check_password',
-            password_verify(wp_hash($password), $hash),
+            password_verify($_password, $hash),
             $password,
             $hash,
             $user_id
         );
+    }
+
+    $_password = wp_hash($password);
+
+    if (empty($_password)) {
+        return false;
     }
 
     $wp_phpass = app_get_wp_phpass();
@@ -87,7 +99,7 @@ function wp_check_password(string $password, string $hash, $user_id = ''): bool 
 
     return (bool) apply_filters(
         'check_password',
-        password_verify(wp_hash($password), $hash),
+        password_verify($_password, $hash),
         $password,
         $hash,
         $user_id
@@ -101,11 +113,17 @@ function wp_check_password(string $password, string $hash, $user_id = ''): bool 
  *
  * @param string $password the password in plain text
  *
- * @return null|false|string
+ * @return false|string
  */
 function wp_hash_password(string $password) {
+    $hash = wp_hash($password);
+
+    if (empty($hash)) {
+        return false;
+    }
+
     return password_hash(
-        wp_hash($password),
+        $hash,
         PASSWORD_ARGON2I,
         (array) app_get_hash_password_options()
     );
@@ -117,7 +135,7 @@ function wp_hash_password(string $password) {
  * @param string     $password the new user password in plaintext
  * @param int|string $user_id  the user ID
  *
- * @return string|void
+ * @return false|string|void
  */
 function wp_set_password(string $password, $user_id) {
     global $wpdb;

@@ -1,0 +1,26 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Constant WPINC not found\\.$#"
+			count: 1
+			path: wp-password-argon.php
+
+		-
+			message: "#^Function app_get_hash_password_options\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: wp-password-argon.php
+
+		-
+			message: "#^Function wp_hash\\(\\) never returns false so it can be removed from the return type\\.$#"
+			count: 1
+			path: wp-password-argon.php
+
+		-
+			message: "#^Function wp_set_password\\(\\) never returns void so it can be removed from the return type\\.$#"
+			count: 1
+			path: wp-password-argon.php
+
+		-
+			message: "#^PHPDoc tag @return with type mixed is not subtype of native type array\\.$#"
+			count: 1
+			path: wp-password-argon.php
