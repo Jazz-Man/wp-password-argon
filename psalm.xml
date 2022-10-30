@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://getpsalm.org/schema/config"
+       xsi:schemaLocation="https://getpsalm.org/schema/config"
+       cacheDirectory="cache/psalm"
+       serializer="igbinary"
+       phpVersion="7.4"
+       errorLevel="1"
+       autoloader="vendor/szepeviktor/phpstan-wordpress/bootstrap.php"
+       errorBaseline="psalm-baseline.xml"
+>
+    <projectFiles>
+        <file name="wp-password-argon.php" />
+        <ignoreFiles>
+            <directory name="vendor"/>
+            <directory name="cache"/>
+            <file name=".php-cs-fixer.php"/>
+        </ignoreFiles>
+    </projectFiles>
+
+    <stubs>
+        <file name="vendor/php-stubs/wordpress-stubs/wordpress-stubs.php"/>
+    </stubs>
+    <globals>
+        <var name="wpdb" type="\wpdb"/>
+        <var name="ABSPATH" type="string"/>
+        <var name="WPINC" type="string"/>
+    </globals>
+</psalm>
